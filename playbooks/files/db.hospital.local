@@ -1,0 +1,16 @@
+; BIND data file for hospital.local
+$TTL    604800
+@       IN      SOA     hospital.local. root.hospital.local. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+
+@               IN      NS      dns.hospital.local.
+
+dns             IN      A       192.168.100.10
+Hfirewall       IN      A       192.168.200.50
+www             IN      CNAME   Hfirewall
+ssmtp           IN      CNAME   Hfirewall
+

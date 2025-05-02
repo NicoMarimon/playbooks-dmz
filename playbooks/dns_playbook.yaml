@@ -1,0 +1,55 @@
+---
+- name: Configurar servidor DNS BIND con zonas personalizadas
+  hosts: dns_servers
+  become: true
+  vars:
+    bind_config_dir: /etc/bind
+    zone_files_dir: /var/cache/bind
+  tasks:
+    - name: Instalar BIND9
+      apt:
+        name: bind9
+        state: present
+        update_cache: yes
+
+    - name: Copiar archivo de zona hospital.local
+      copy:
+        src: "files/db.hospital.local"
+        dest: "{{ zone_files_dir }}/db.hospital.local"
+
+    - name: Copiar archivo de zona soeasy.local
+      copy:
+        src: "files/db.soeasy.local"
+        dest: "{{ zone_files_dir }}/db.soeasy.local"
+
+    - name: Copiar archivo de zona universidad.local
+      copy:
+        src: "files/db.universidad.local"
+        dest: "{{ zone_files_dir }}/db.universidad.local"
+
+    - name: Configurar named.conf.local
+      template:
+        src: "templates/named.conf.local.j2"
+        dest: "{{ bind_config_dir }}/named.conf.local"
+      notify: Reiniciar BIND9
+
+    - name: Verificar sintaxis de configuración de BIND
+      command: named-checkconf
+      register: checkconf_result
+      failed_when: checkconf_result.rc != 0
+
+    - name: Verificar archivos de zona
+      shell: "named-checkzone {{ item.domain }} {{ zone_files_dir }}/db.{{ item.domain }}"
+      loop:
+        - { domain: 'hospital.local' }
+        - { domain: 'soeasy.local' }
+        - { domain: 'universidad.local' }
+      register: checkzone_result
+      failed_when: checkzone_result.rc != 0
+
+  handlers:
+    - name: Reiniciar BIND9
+      service:
+        name: bind9
+        state: restarted
+

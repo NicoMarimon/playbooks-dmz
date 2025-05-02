@@ -1,0 +1,16 @@
+; BIND data file for universidad.local
+$TTL    604800
+@       IN      SOA     universidad.local. root.universidad.local. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+
+@               IN      NS      dns.universidad.local.
+
+dns             IN      A       192.168.100.10
+Ufirewall       IN      A       192.168.200.50
+www             IN      CNAME   Ufirewall
+ssmtp           IN      CNAME   Ufirewall
+

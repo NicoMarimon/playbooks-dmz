@@ -1,0 +1,21 @@
+; BIND data file for soeasy.local
+$TTL    604800
+@       IN      SOA     soeasy.local. root.soeasy.local. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+
+@               IN      NS      ferrari.soeasy.local.
+                IN      MX 10   mail.soeasy.local.
+
+ferrari         IN      A       192.168.100.10
+audi            IN      A       192.168.100.11
+mail            IN      A       192.168.200.52
+firewall        IN      A       192.168.200.52
+
+smtp            IN      CNAME   mail
+pop3            IN      CNAME   mail
+imap            IN      CNAME   mail
+
