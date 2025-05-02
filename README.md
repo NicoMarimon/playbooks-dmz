@@ -8,14 +8,14 @@ La estructura actual del proyecto es la siguiente:
 
 - playbooks-proyecto/
 - ├── inventory
--├── playbooks/
--│ ├── dns_playbook.yaml
--│ ├── files/
--│ │ ├── db.hospital.local
--│ │ ├── db.soeasy.local
--│ │ └── db.universidad.local
--│ └── templates/
--│ └── named.conf.local.j2
+- ├── playbooks/
+- │ ├── dns_playbook.yaml
+- │ ├── files/
+- │ │ ├── db.hospital.local
+- │ │ ├── db.soeasy.local
+- │ │ └── db.universidad.local
+- │ └── templates/
+- │ └── named.conf.local.j2
 
 
 ## Descripción de la parte completada
