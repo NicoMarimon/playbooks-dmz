@@ -1,6 +1,6 @@
-# Proyecto Final - Despliegue de Servicios con Ansible
+# Proyecto Final - Este repositorio contiene los archivos de configuración del despliegue de la dmz
 
-## Estructura actual
+## Estructura del repositorio
 
 Este proyecto contiene el despliegue automatizado de un servidor DNS BIND9 en un contenedor LXD, utilizando Ansible.
 
@@ -18,7 +18,7 @@ La estructura actual del proyecto es la siguiente:
         ─ named.conf.local.j2
 
 
-## Descripción de la parte completada
+## Despliegue del servicio DNS con ansible playbook + archivos de configuración
 
 - **dns_playbook.yaml**: Playbook principal para desplegar el servicio DNS en el contenedor `dns-server`.
 - **files/**: Contiene los archivos de zona predefinidos para los dominios `hospital.local`, `soeasy.local` y `universidad.local`.
