@@ -6,8 +6,8 @@ Este proyecto contiene el despliegue automatizado de un servidor DNS BIND9 en un
 
 La estructura actual del proyecto es la siguiente:
 
-playbooks-proyecto/
-├── inventory
+- playbooks-proyecto/
+- ├── inventory
 ├── playbooks/
 │ ├── dns_playbook.yaml
 │ ├── files/
