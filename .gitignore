@@ -1,0 +1,18 @@
+# Ignorar archivos de retry de ansible
+*.retry
+
+# Ignorar archivos de backup de editores
+*~
+*.swp
+
+# Ignorar archivos de log temporales
+*.log
+
+# Ignorar configuraciones locales
+.vscode/
+.idea/
+__pycache__/
+
+# Ignorar archivos del sistema
+.DS_Store
+Thumbs.db
