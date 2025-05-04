@@ -1,0 +1,32 @@
+readme_directory = no
+compatibility_level = 3.6
+
+smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+biff = no
+
+smtpd_tls_cert_file={{ ssl_cert_path }}
+smtpd_tls_key_file={{ ssl_key_path }}
+smtpd_tls_security_level=may
+smtpd_tls_CApath=/etc/ssl/certs
+smtpd_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+append_dot_mydomain = no
+
+myhostname = {{ mail_hostname }}
+mydomain = {{ domain }}
+
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+relayhost = 
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 192.168.0.0/16
+inet_interfaces = all
+recipient_delimiter = +
+
+compatibility_level = 2
+
+myorigin = $mydomain
+mailbox_size_limit = 0
+inet_protocols = all
+home_mailbox = Maildir/
+
