@@ -1,0 +1,102 @@
+---
+- name: Configurar servidor de correo con Postfix y Dovecot
+  hosts: mailservers
+  become: yes
+
+  vars:
+    domain: "soeasy.local"
+    mail_hostname: "mail.soeasy.local"
+    ssl_cert_path: "/etc/ssl/certs/mail.pem"
+    ssl_key_path: "/etc/ssl/private/mail.key"
+    mailbox_dir: "Maildir"
+    mail_user: "admin_concesionario"
+    mail_user_password: "12345678"
+
+  tasks:
+    - name: Configurar DNS en resolv.conf
+      copy:
+        content: |
+          nameserver 192.168.200.52
+        dest: /etc/resolv.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Instalar postfix y dovecot
+      apt:
+        name:
+          - postfix
+          - dovecot-core
+          - dovecot-imapd
+        state: present
+        update_cache: yes
+
+    - name: Crear certificados SSL/TLS autofirmados
+      command: >
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048
+        -keyout {{ ssl_key_path }} -out {{ ssl_cert_path }}
+        -subj "/CN={{ mail_hostname }}"
+      args:
+        creates: "{{ ssl_cert_path }}"
+
+    - name: Crear usuario de correo
+      user:
+        name: "{{ mail_user }}"
+        password: "{{ mail_user_password | password_hash('sha512') }}"
+        shell: /bin/bash
+        create_home: yes
+        home: "/home/{{ mail_user }}"
+
+    - name: Crear directorio Maildir para el usuario
+      file:
+        path: "/home/{{ mail_user }}/{{ mailbox_dir }}"
+        state: directory
+        owner: "{{ mail_user }}"
+        group: "{{ mail_user }}"
+
+    - name: Configurar Postfix (main.cf)
+      template:
+        src: templates/postfix_main.cf.j2
+        dest: /etc/postfix/main.cf
+      notify: Reiniciar Postfix
+
+    - name: Configurar Dovecot (dovecot.conf)
+      template:
+        src: templates/dovecot.conf.j2
+        dest: /etc/dovecot/dovecot.conf
+      notify: Reiniciar Dovecot
+
+    - name: Configurar Dovecot (10-mail.conf)
+      template:
+        src: templates/10-mail.conf.j2
+        dest: /etc/dovecot/conf.d/10-mail.conf
+      notify: Reiniciar Dovecot
+
+    - name: Configurar Dovecot (10-master.conf)
+      template:
+        src: templates/10-master.conf.j2
+        dest: /etc/dovecot/conf.d/10-master.conf
+      notify: Reiniciar Dovecot
+
+    - name: Configurar Dovecot (10-auth.conf)
+      template:
+        src: templates/10-auth.conf.j2
+        dest: /etc/dovecot/conf.d/10-auth.conf
+      notify: Reiniciar Dovecot
+
+    - name: Configurar Dovecot (10-ssl.conf)
+      template:
+        src: templates/10-ssl.conf.j2
+        dest: /etc/dovecot/conf.d/10-ssl.conf
+      notify: Reiniciar Dovecot
+
+  handlers:
+    - name: Reiniciar Postfix
+      service:
+        name: postfix
+        state: restarted
+
+    - name: Reiniciar Dovecot
+      service:
+        name: dovecot
+        state: restarted
